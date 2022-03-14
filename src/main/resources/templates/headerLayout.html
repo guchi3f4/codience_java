@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title th:text="${title}">Insert title here</title>
+
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+<link th:href="@{/css/app.css}" rel="stylesheet">
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+<script src="https://kit.fontawesome.com/f8d37013c4.js"></script>
+
+<!--pattern.css 背景用-->
+<link href="https://unpkg.com/pattern.css" rel="stylesheet">
+</head>
+<body>
+    <!-- ===== ヘッダー（ナビゲーションバー） =====  -->
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">SpringSample</a>
+            </div>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/users/admin}">アドミン用画面</a>
+            <form method="post" th:action="@{/logout}">
+                <button class="btn btn-link pull-right navbar-brand" type="submit">
+                    ログアウト
+                </button>
+            </form>
+        </div>
+    </nav>
+    <!-- ===== コンテンツ ===== -->
+    <main>
+    	<div th:include="__${contents}__"></div>
+    </main>
+</body>
+</html>

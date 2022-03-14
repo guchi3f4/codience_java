@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href="https://unpkg.com/pattern.css" rel="stylesheet">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="userIndex_contents">
+		<div class='pattern-cross-dots-lg'>
+		  <div style='background: rgba(235,235,235,0.70);'>
+		    <div class='col-md-9 mx-auto py-5 border shadow px-4 px-sm-5 bg-white' style='min-height: 750px'>
+		      <h1 class='fw-bold mb-4' style='font-family: cursive;'>Users</h1>
+		      <div class='user-index row align-items-stretch mt-4'>
+		      	<div th:each="user : ${userList}" class='col-lg-4 col-md-6 mb-3 px-2'>
+		       		<div th:include="__${userInfo}__"></div>
+		       	</div>
+		      </div>
+		    </div>
+		  </div>
+		</div>	  
+	</div>
+</body>
+</html>

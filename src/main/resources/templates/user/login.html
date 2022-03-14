@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="login_contents">
+		<div class='pattern-horizontal-lines-lg'>
+			<div class='d-flex align-items-center' style='background: rgba(250,250,250,0.90); height: 750px;'>
+		    <div class="mx-auto border px-4 px-sm-5 py-5 shadow-lg bg-white" style='width: 560px;'>
+					<h2 class="mb-4">Log in</h2>
+		      <form method="post" th:action="@{/login}">
+						<p th:if="${session['SPRING_SECURITY_LAST_EXCEPTION']} != null"
+							th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}" class="text-danger">
+							ログインエラーメッセージ
+						</p>
+						<div class="mb-4">
+		      		<label class="mb-2 fw-bold" for="email">Email</label>
+		      		<input type="text" name="email" class="form-control">
+		      	</div>
+		      	<div class="mb-4">
+		      		<label class="mb-2 fw-bold" for="password">Password</label>
+		      		<input type="password" name="password" class="form-control">
+		      	</div>
+		      	<div class="mb-4">
+		      		<button type="submit" class="btn btn-success">log in</button>
+		      	</div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+	</div> 
+</body>
+</html>

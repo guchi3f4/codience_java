@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="userEdit_contents">
+		<div class='pattern-horizontal-lines-lg'>
+		  <div class='d-flex align-items-center' style='background: rgba(250,250,250,0.90); height: 750px;'>
+		    <div class="mx-auto border px-4 px-sm-5 py-5 shadow-lg bg-white" style='width: 560px;'>
+		      <h2 class='mb-4'>User info</h2>
+		      <form method="post" th:action="@{/users/edit}" th:object="${userForm}" enctype="multipart/form-data">
+		      	<div class="mb-4 col-md-5">
+		      		<label for="name" class="fw-bold mb-2">Name</label>
+		      		<input type="text" th:field="*{name}" class="form-control">
+		      	</div>
+		      	<div class="mb-3">
+		      		<label for="profileImageId" class="fw-bold"></label>
+		      		<input class="form-control-file" type="file" name="profileImageId">
+		      	</div>
+		      	<div class="mb-4">
+		      		<label for="introduction" class="fw-bold mb-2">Introduction</label>
+		      		<textarea th:field="*{introduction}" class="form-control" rows="5"></textarea>
+		      	</div>
+		      	<input type="hidden" name="userId" th:value="${userId}">
+		      	<div class="mb-4">
+		      		<button type="submit" name="update" class="btn btn-success">Update User</button>
+		      	</div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+	</div>
+</body>
+</html>

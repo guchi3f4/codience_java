@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="articleIndex_contents">
+		<div class='pattern-cross-dots-lg'>
+			<div style='background: rgba(235, 235, 235, 0.70);'>
+				<div class='col-md-10 mx-auto py-5 border shadow px-4 px-sm-5 bg-white' style='min-height: 750px'>
+					<div class="row">
+						<!-- サイドバー -->
+						<div class='col-md-5 col-lg-4'>
+							<div th:include="__${newForm}__"></div>
+						</div>
+						<!-- メインコンテンツ -->
+						<div class='col-md-7 col-lg-8'>
+							<h1 class='fw-bold mb-4' style='font-family: cursive;'>Articles</h1>
+							<div th:each="article : ${articleList}" class='container-md rounded py-3 mb-3'
+								style='border: 2px solid lightgray;' onMouseOut="this.style.boxShadow='';"
+								onMouseOver="this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.2)'">
+								<h5><a href="/" th:text="${article.title}" class='fw-bold text-body'></a></h5>
+								<div class='row border-bottom pb-2'>
+									<div class='col-8 col-sm-9 text-truncate'>
+										<i class="fas fa-link"></i> <a th:href="${article.link}" th:text="${article.link}"></a>
+									</div>
+									<div class='col-2 pl-0 text-end text-nowrap'>
+										<i class="far fa-bookmark"></i>
+									</div>
+									<div class=' col-2 col-sm-1 px-0 text-nowrap'>
+										<i class="far fa-thumbs-up"></i>
+									</div>
+								</div>
+								<div class='row mb-2 py-2'>
+									<div class='col-md-2 px-3 pb-1 pr-md-0 pl-md-3'>
+										<img class="attachment user profile_image rounded-circle"
+											th:src="${article.user.profileImageId} ? ${'data:image/png;base64,' + article.user.getImgOut} : @{/images/no_image.jpg}"
+											width="50" height="50">
+									</div>
+									<div th:text="${article.summary}" class='col-md-10 px-3 px-lg-0 mx-auto'></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

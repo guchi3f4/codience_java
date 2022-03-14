@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="newForm">
+		<h3 class="mb-4">New Article</h3>
+		<div class="px-3">
+			<form method="post" th:action="@{/articles/new}" th:object="${articleForm}">
+				<div class="mb-4">
+					<label for="title" class="fw-bold">Title</label>
+					<input type="text" th:field="*{title}" class="form-control">
+					<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
+				</div>
+				<div class="mb-4">
+					<label for="link" class="fw-bold">Link</label>
+					<input type="text" th:field="*{link}" class="form-control">
+					<div th:if="${#fields.hasErrors('link')}" th:errors="*{link}" class="text-danger"></div>
+				</div>
+				<div class="mb-4">
+					<!-- カテゴリー -->
+				</div>
+				<div class="mb-4">
+					<!-- タグ -->
+				</div>
+				<div class="mb-4">
+					<label for="summary" class="fw-bold">Summary</label>
+					<textarea th:field="*{summary}" class="form-control" rows="5"></textarea>
+					<div th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}" class="text-danger"></div>
+				</div>
+				<div class="mb-4">
+					<label for="body" class="fw-bold">Body</label>
+					<textarea th:field="*{body}" class="form-control" rows="10"></textarea>
+					<div th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="text-danger"></div>
+				</div>
+				<div class="mb-4">
+					<input th:if="${articleId}" type="hidden" name="articleId" th:value="${articleId}">
+					<button type="submit" class="btn btn-success">Create Article</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
