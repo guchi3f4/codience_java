@@ -3,6 +3,7 @@ package com.example.demo.app.article.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.app.article.form.ArticleForm;
+import com.example.demo.app.user.form.SignupForm;
 import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.entity.User;
 import com.example.demo.domain.service.ArticleService;
@@ -32,30 +34,37 @@ public class ArticleController {
 	private final UserService userService;
 	
 	@GetMapping
-	public String index(Model model, ArticleForm form) {
-		
+	public String index(
+		Model model,
+		ArticleForm articleForm,
+		SignupForm signupForm,
+		@AuthenticationPrincipal User loginUser)
+	{
 		model.addAttribute("contents", "article/index :: articleIndex_contents");
-		model.addAttribute("newForm", "article/_newForm :: newForm");
 		
 		List<Article> articleList = articleService.selectAll();
-		System.out.println(articleList);
 		model.addAttribute("articleList", articleList);
+		
+		model.addAttribute("user", loginUser);
+		
 		
 		return "/headerLayout";
 	}
 	
 	@GetMapping("/{id}")
-	public String detail(Model model, @PathVariable("id") int articleId, ArticleForm form) {
-		
+	public String detail(
+		Model model,
+		@PathVariable("id") int articleId,
+		ArticleForm articleForm,
+		SignupForm signupForm)
+	{	
 		model.addAttribute("contents", "article/detail :: articleDetail_contents");
-		model.addAttribute("newForm", "article/_newForm :: newForm");
 		
 		Article article = articleService.selectOne(articleId);
 		model.addAttribute("article", article);
 		
 		User user = userService.selectOne(article.getUser().getUserId());
 		model.addAttribute("user", user);
-		model.addAttribute("userInfo", "user/_userInfo :: userInfo_component");
 		
 		return "/headerLayout";
 	}
@@ -70,7 +79,8 @@ public class ArticleController {
 	public String create(
 		Model model,
 		@ModelAttribute @Validated ArticleForm form,
-		BindingResult bindingResult)
+		BindingResult bindingResult,
+		@AuthenticationPrincipal User loginUser)
 	{
 		if(bindingResult.hasErrors()) {
 			
@@ -78,7 +88,7 @@ public class ArticleController {
 			
 		} else {
 			var article = new Article();
-			article.setUserId(1);
+			article.setUserId(loginUser.getUserId());
 			article.setTitle(form.getTitle());
 			article.setLink(form.getLink());
 			article.setSummary(form.getSummary());
@@ -86,7 +96,6 @@ public class ArticleController {
 			article.setCreated(LocalDateTime.now());
 			article.setUpdated(LocalDateTime.now());
 			
-			System.out.println(article);
 			articleService.insertOne(article);
 			
 			return "redirect:/articles";
@@ -117,7 +126,8 @@ public class ArticleController {
 		Model model,
 		@ModelAttribute @Validated ArticleForm form,
 		BindingResult bindingResult,
-		@RequestParam("articleId") int articleId)
+		@RequestParam("articleId") int articleId,
+		@AuthenticationPrincipal User loginUser)
 	{
 		if(bindingResult.hasErrors()){
 			
@@ -126,7 +136,7 @@ public class ArticleController {
 		} else {
 			var article = new Article();
 			article.setArticleId(articleId);
-			article.setUserId(1);
+			article.setUserId(loginUser.getUserId());
 			article.setTitle(form.getTitle());
 			article.setLink(form.getLink());
 			article.setSummary(form.getSummary());
@@ -134,7 +144,6 @@ public class ArticleController {
 			article.setCreated(LocalDateTime.now());
 			article.setUpdated(LocalDateTime.now());
 			
-			System.out.println(article);
 			articleService.updateOne(article);
 			
 			return "redirect:/articles/" + articleId;

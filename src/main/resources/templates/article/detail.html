@@ -8,12 +8,12 @@
 	<div th:fragment="articleDetail_contents">
 		<div class='pattern-cross-dots-lg'>
 			<div style='background: rgba(235, 235, 235, 0.70);'>
-				<div class='col-md-10 mx-auto py-5 border shadow px-4 px-sm-5 bg-white' style='min-height: 750px'>
+				<div class='col-md-9 mx-auto py-5 border shadow px-4 px-sm-5 bg-white' style='min-height: 750px'>
 					<div class="row">
 						<!-- サイドバー -->
 						<div class='col-md-5 col-lg-4'>
-							<div th:include="__${userInfo}__" class="mb-4"></div>
-							<div th:include="__${newForm}__"></div>
+							<div th:include="user/_userInfo :: userInfo_component" class="mb-4"></div>
+							<div th:include="article/_newForm :: newForm"></div>
 						</div>
 						<!-- メインコンテンツ -->
 						<div class='col-md-7 col-lg-8'>

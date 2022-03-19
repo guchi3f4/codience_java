@@ -86,10 +86,10 @@ public class ArticleDaoImpl implements ArticleDao {
 	@Override
 	public int updateOne(Article article) {
 		int num = jdbcTemplate.update(
-			"UPDATE article SET user_id = ?, title = ?, link = ?, summary = ?, body = ?, created = ?, updated = ?"
+			"UPDATE article SET title = ?, link = ?, summary = ?, body = ?, updated = ?"
 			+ " WHERE id = ?",
-			article.getUserId(), article.getTitle(), article.getLink(), article.getSummary(),
-			article.getBody(), article.getCreated(), article.getUpdated(), article.getArticleId()
+			article.getTitle(), article.getLink(), article.getSummary(),
+			article.getBody(), article.getUpdated(), article.getArticleId()
 		);
 		
 		return num;

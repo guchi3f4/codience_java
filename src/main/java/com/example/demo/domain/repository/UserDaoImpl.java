@@ -73,7 +73,6 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public int updateOne(User user) {
-		System.out.println(user);
 		int num = jdbcTemplate.update(
 			"UPDATE user SET name = ?, introduction = ?, profile_image_id = ? WHERE id = ?",
 			user.getName() ,user.getIntroduction(), user.getProfileImageId(), user.getUserId()

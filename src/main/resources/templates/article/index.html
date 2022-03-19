@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -8,11 +9,17 @@
 	<div th:fragment="articleIndex_contents">
 		<div class='pattern-cross-dots-lg'>
 			<div style='background: rgba(235, 235, 235, 0.70);'>
-				<div class='col-md-10 mx-auto py-5 border shadow px-4 px-sm-5 bg-white' style='min-height: 750px'>
+				<div class='col-md-9 mx-auto py-5 border shadow px-4 px-sm-5 bg-white' style='min-height: 750px'>
 					<div class="row">
 						<!-- サイドバー -->
 						<div class='col-md-5 col-lg-4'>
-							<div th:include="__${newForm}__"></div>
+							<div th:if="${user}" th:include="user/_userInfo :: userInfo_component" class="mb-4"></div>
+							<th:block sec:authorize="isAuthenticated()">
+								<div th:include="article/_newForm :: newForm"></div>
+							</th:block>
+							<th:block sec:authorize="!isAuthenticated()">
+								<div th:include="user/_signup :: signupForm"></div>
+							</th:block>
 						</div>
 						<!-- メインコンテンツ -->
 						<div class='col-md-7 col-lg-8'>

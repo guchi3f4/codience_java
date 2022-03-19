@@ -18,19 +18,34 @@
 </head>
 <body>
     <!-- ===== ヘッダー（ナビゲーションバー） =====  -->
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">SpringSample</a>
-            </div>
-            <a sec:authorize="hasRole('ADMIN')" th:href="@{/users/admin}">アドミン用画面</a>
-            <form method="post" th:action="@{/logout}">
-                <button class="btn btn-link pull-right navbar-brand" type="submit">
-                    ログアウト
-                </button>
-            </form>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark" style='background-color: rgba(13,65,134,1);'>
+        <div class="col-9 d-flex mx-auto">
+          <a class="navbar-brand" th:href="@{/articles}">
+            <img class="header-logo navbar-brand p-0" alt='header-logo' th:src="@{/images/codience.png}" width="165" height="80">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			      <span class="navbar-toggler-icon"></span>
+			    </button>
+			    <div class="collapse navbar-collapse" id="navbarNav">
+           <ul class="navbar-nav ms-auto">
+            <th:block sec:authorize="isAuthenticated()">	
+            	<li class="nav-item"><a th:href="@{/users}" class="fas fa-users nav-link text-light"> Users</a></li>
+            	<li class="nav-item"><a th:href="@{/users/} + ${#authentication.principal.getUserId}" class="fas fa-user nav-link text-light"> Mypage</a></li>
+            	<li class="nav-item"><a th:href="@{/articles}" class="fas fa-book-open nav-link text-light"> Articles</a></li>
+            	<li class="nav-item"><a th:href="@{/logout}" class="fas fa-sign-out-alt nav-link text-light"> logout</a></li>
+            </th:block>
+            <th:block sec:authorize="!isAuthenticated()">
+            	<li class="nav-item"><a th:href="@{/users}" class="fas fa-users nav-link text-light"> Users</a></li>
+            	<li class="nav-item"><a th:href="@{/articles}" class="fas fa-book-open nav-link text-light"> Articles</a></li>
+            	<li class="nav-item"><a th:href="@{/signup}" class="fas fa-user-plus nav-link text-light"> sign up</a></li>
+            	<li class="nav-item"><a th:href="@{/login}" class="fas fa-sign-in-alt nav-link text-light"> login</a></li>
+            </th:block>
+           </ul>
+          </div>
         </div>
-    </nav>
+      </nav>
+    </header>
     <!-- ===== コンテンツ ===== -->
     <main>
     	<div th:include="__${contents}__"></div>

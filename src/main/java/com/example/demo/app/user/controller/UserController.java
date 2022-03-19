@@ -88,7 +88,6 @@ public class UserController {
 	
 	@GetMapping("/{id}")
 	public String detail(Model model, @PathVariable("id") int userId) {
-		System.out.println(userId);
 		model.addAttribute("contents", "user/detail :: userDetail_contents");
 		model.addAttribute("userInfo", "user/_userInfo :: userInfo_component");
 		
