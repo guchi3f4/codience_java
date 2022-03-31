@@ -17,5 +17,9 @@ public interface ArticleService {
 	public int deleteOne(int articleId);
 	
 	public Article selectLastRecord();
+	
+	public void insertArticle(Article article, List<String> tagNameList);
+	
+	public void updateArticle(Article article, List<String> tagNameList);
 
 }

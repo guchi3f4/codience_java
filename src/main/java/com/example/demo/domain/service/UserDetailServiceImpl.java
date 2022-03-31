@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.domain.entity.User;
 import com.example.demo.domain.repository.mybatis.UserMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return userMapper.selectSessionUser(username);
+		
+		User user = userMapper.selectSessionUser(username);
+		
+		if(user == null) {
+			return new User(); 
+		} else {
+			return user;
+		}
 	}
 
 }

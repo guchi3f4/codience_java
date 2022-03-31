@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>404Error</title>
+</head>
+<body>
+    <h1 th:text="${status} + ' ' + ${error}"></h1>
+    <p>404エラーの専用ページです</p>
+    <a th:href="@{/articles}" class="btn btn-link" type="submit">記事一覧画面に戻る</a>
+</body>
+</html>

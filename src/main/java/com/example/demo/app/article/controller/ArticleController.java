@@ -1,10 +1,8 @@
 package com.example.demo.app.article.controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,18 +21,14 @@ import com.example.demo.app.article.form.ArticleForm;
 import com.example.demo.app.comment.form.CommentForm;
 import com.example.demo.app.user.form.SignupForm;
 import com.example.demo.domain.entity.Article;
-import com.example.demo.domain.entity.ArticleTag;
 import com.example.demo.domain.entity.Category;
 import com.example.demo.domain.entity.Comment;
 import com.example.demo.domain.entity.Tag;
 import com.example.demo.domain.entity.User;
 import com.example.demo.domain.service.ArticleService;
-import com.example.demo.domain.service.ArticleTagService;
 import com.example.demo.domain.service.BookmarkService;
-import com.example.demo.domain.service.CategoryService;
 import com.example.demo.domain.service.CommentService;
 import com.example.demo.domain.service.FavoriteService;
-import com.example.demo.domain.service.TagService;
 import com.example.demo.domain.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -54,12 +48,6 @@ public class ArticleController {
 	private final FavoriteService favoriteService;
 	
 	private final CommentService commentService;
-	
-	private final CategoryService categoryService;
-	
-	private final TagService tagService;
-	
-	private final ArticleTagService articleTagService;
 	
 	@GetMapping
 	public String index(
@@ -143,40 +131,8 @@ public class ArticleController {
 			
 		} else {
 			
-			//カテゴリー
-			Optional<Category> categoryOpt = categoryService.findOne(form.getCategoryName());
-			if (categoryOpt.isEmpty()) {
-				var category = new Category();
-				category.setCategoryName(form.getCategoryName());
-				categoryService.insertOne(category);
-				categoryOpt = categoryService.findOne(form.getCategoryName());
-			}
-			
-			//タグ
-			String[] tagNames = form.getTagNames().split(",");
-			List<String> tagNameList = new ArrayList<String>(Arrays.asList(tagNames));
-			
-			List<Tag> DuplicateTagList = tagService.findAllByDuplicateName(tagNameList);
-			
-			if(DuplicateTagList.size() != tagNames.length){
-				for(var tag : DuplicateTagList) {
-					tagNameList.remove(tagNameList.indexOf(tag.getTagName()));
-				}
-				List<Tag> tagList = new ArrayList<Tag>();
-				for(var tagName : tagNameList) {
-					var tag = new Tag();
-					tag.setTagName(tagName);
-					
-					tagList.add(tag);
-				}
-				tagService.insertAll(tagList);
-				
-				DuplicateTagList = tagService.findAllByDuplicateName(Arrays.asList(tagNames));
-			}
-			
 			var article = new Article();
 			article.setUserId(loginUser.getUserId());
-			categoryOpt.ifPresent(category -> article.setCategoryId(category.getCategoryId()));
 			article.setTitle(form.getTitle());
 			article.setLink(form.getLink());
 			article.setSummary(form.getSummary());
@@ -184,20 +140,15 @@ public class ArticleController {
 			article.setCreated(LocalDateTime.now());
 			article.setUpdated(LocalDateTime.now());
 			
-			articleService.insertOne(article);
+			var category = new Category();
+			category.setCategoryName(form.getCategoryName());
+			article.setCategory(category);
 			
-			//記事_タグ 中間クラス
-			Article lastArticle = articleService.selectLastRecord();
+			//タグネームを分離
+			String[] tagNames = form.getTagNames().split(",");
+			List<String> tagNameList = Arrays.asList(tagNames);
 			
-			List<ArticleTag> articleTagList = new ArrayList<ArticleTag>();
-			for(var tag : DuplicateTagList) {
-				var articleTag = new ArticleTag();
-				articleTag.setArticleId(lastArticle.getArticleId());
-				articleTag.setTagId(tag.getTagId());
-				
-				articleTagList.add(articleTag);
-			}
-			articleTagService.insertAll(articleTagList);
+			articleService.insertArticle(article, tagNameList);
 			
 			return "redirect:/articles";
 		}
@@ -219,6 +170,14 @@ public class ArticleController {
 			form.setSummary(article.getSummary());
 			form.setBody(article.getBody());
 			form.setCategoryName(article.getCategory().getCategoryName());
+			
+			List<Tag> tags = article.getTags();
+			StringBuilder sb = new StringBuilder();
+			for(var tag : tags) {
+				sb.append(tag.getTagName()).append(",");
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			form.setTagNames(sb.toString());
 			
 			model.addAttribute("articleId", articleId);
 			model.addAttribute("contents", "article/form :: articleForm_contents");
@@ -243,40 +202,9 @@ public class ArticleController {
 			
 		} else {
 			
-			//カテゴリの登録
-			Optional<Category> categoryOpt = categoryService.findOne(form.getCategoryName());
-			if (categoryOpt.isEmpty()) {
-				var category = new Category();
-				category.setCategoryName(form.getCategoryName());
-				categoryService.insertOne(category);
-				categoryOpt = categoryService.findOne(form.getCategoryName());
-			}
-			
-			//タグの登録
-			String[] tagNames = form.getTagNames().split(",");
-			List<String> tagNameList = new ArrayList<String>(Arrays.asList(tagNames));
-			List<Tag> DuplicateTagList = tagService.findAllByDuplicateName(tagNameList);
-			
-			if(DuplicateTagList.size() != tagNames.length){
-				for(var tag : DuplicateTagList) {
-					tagNameList.remove(tagNameList.indexOf(tag.getTagName()));
-				}
-				List<Tag> tagList = new ArrayList<Tag>();
-				for(var tagName : tagNameList) {
-					var tag = new Tag();
-					tag.setTagName(tagName);
-					
-					tagList.add(tag);
-				}
-				tagService.insertAll(tagList);
-				
-				DuplicateTagList = tagService.findAllByDuplicateName(Arrays.asList(tagNames));
-			}
-			
 			var article = new Article();
 			article.setArticleId(articleId);
 			article.setUserId(loginUser.getUserId());
-			categoryOpt.ifPresent(category -> article.setCategoryId(category.getCategoryId()));
 			article.setTitle(form.getTitle());
 			article.setLink(form.getLink());
 			article.setSummary(form.getSummary());
@@ -284,37 +212,15 @@ public class ArticleController {
 			article.setCreated(LocalDateTime.now());
 			article.setUpdated(LocalDateTime.now());
 			
-			articleService.updateOne(article);
+			var category = new Category();
+			category.setCategoryName(form.getCategoryName());
+			article.setCategory(category);
 			
-			//記事_タグ 中間クラス
-			Article lastArticle = articleService.selectLastRecord();
-			List<Tag> oldTagList = tagService.findAllByArticleId(articleId);
+			//タグネームを分離
+			String[] tagNames = form.getTagNames().split(",");
+			List<String> tagNameList = Arrays.asList(tagNames);
 			
-			//新しい記事_タグを登録
-			List<ArticleTag> newArticleTagList = new ArrayList<ArticleTag>();
-			for(var newTag : DuplicateTagList) {
-				if(oldTagList.contains(newTag) == false) {
-					var newArticleTag = new ArticleTag();
-					newArticleTag.setArticleId(lastArticle.getArticleId());
-					newArticleTag.setTagId(newTag.getTagId());
-					
-					newArticleTagList.add(newArticleTag);
-				}
-			}
-			if (newArticleTagList.size() > 0) {
-				articleTagService.insertAll(newArticleTagList);
-			}
-			
-			//古い記事_タグを削除
-			List<Integer> oldTagIdList = new ArrayList<Integer>();
-			for(var oldTag : oldTagList) {
-				if (DuplicateTagList.contains(oldTag) == false) {
-					oldTagIdList.add(oldTag.getTagId());
-				}
-			}
-			if (oldTagIdList.size() > 0){
-				articleTagService.deleteAll(lastArticle.getArticleId(), oldTagIdList);
-			}
+			articleService.updateArticle(article, tagNameList);
 			
 			return "redirect:/articles/" + articleId;
 		}

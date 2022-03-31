@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class ArticleForm {
 	
+	private int userId;
+	
 	@NotNull
 	private String title;
 	

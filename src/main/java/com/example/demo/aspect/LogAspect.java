@@ -12,13 +12,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogAspect {
 	
+	final String RED    = "\u001b[00;31m";
+	final String GREEN  = "\u001b[00;32m";
+	final String YELLOW = "\u001b[00;33m";
+	final String PURPLE = "\u001b[00;34m";
+	final String PINK   = "\u001b[00;35m";
+	final String CYAN   = "\u001b[00;36m";   
+	final String END    = "\u001b[00m";
+	
 	//Controllerクラスのログ
 	
 	@Before("execution(* com.example.demo.app.*..*Controller*.*(..))")
 	public void startControllerLog(JoinPoint jp) {
 		System.out.println("メソッド開始：" + jp.getSignature());
-		System.out.print(" クラス名：" + jp.getSignature().getDeclaringType().getSimpleName());
-        System.out.print("  メソッド名：" + jp.getSignature().getName());
+		System.out.print(" クラス名：" + PINK + jp.getSignature().getDeclaringType().getSimpleName() + END);
+        System.out.print("  メソッド名：" + PINK + jp.getSignature().getName() + END);
         System.out.println("  (" + jp.getSignature().getDeclaringType().getSimpleName() + ".java:" + 1 + ")");
         printArgStr(jp);
 	}
@@ -43,8 +51,8 @@ public class LogAspect {
 	public void startServiceLog(JoinPoint jp) {
 		System.out.println("");
 		System.out.println("メソッド開始：" + jp.getSignature());
-		System.out.print(" クラス名：" + jp.getSignature().getDeclaringType().getSimpleName());
-        System.out.print("  メソッド名：" + jp.getSignature().getName());
+		System.out.print(" クラス名：" + PINK +jp.getSignature().getDeclaringType().getSimpleName() + END);
+        System.out.print("  メソッド名：" + PINK + jp.getSignature().getName() + END);
         System.out.println("  (" + jp.getSignature().getDeclaringType().getSimpleName() + ".java:" + 1 + ")");
         printArgStr(jp);
 	}
@@ -69,8 +77,8 @@ public class LogAspect {
 	public void startDaoLog(JoinPoint jp) {
 		System.out.println("");
 		System.out.println("メソッド開始：" + jp.getSignature());
-		System.out.print(" クラス名：" + jp.getSignature().getDeclaringType().getSimpleName());
-        System.out.print("  メソッド名：" + jp.getSignature().getName());
+		System.out.print(" クラス名：" + PINK + jp.getSignature().getDeclaringType().getSimpleName() + END);
+        System.out.print("  メソッド名：" + PINK + jp.getSignature().getName() + END);
         System.out.println("  (" + jp.getSignature().getDeclaringType().getSimpleName() + ".java:" + 1 + ")");
         printArgStr(jp);
 	}
