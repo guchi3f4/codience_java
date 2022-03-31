@@ -59,6 +59,16 @@
 											width="50" height="50">
 									</div>
 									<div th:text="${article.summary}" class='col-md-10 px-3 px-lg-0 mx-auto'></div>
+									<div class='d-inline-block mt-3'>
+										<span>Category：</span>
+										<a th:text="${article.category.categoryName}" th:href="@{/articles}"
+											class="badge border border-success text-success px-2 py-1 me-3" style="font-size: 100%;">
+										</a>
+										<span>Tag：</span>
+										<a th:each="tag : ${article.tags}" th:text="${tag.tagName}" th:href="@{/articles}"
+											class="badge rounded-pill bg-primary me-2 py-1 text-white" style="font-size: 100%;">
+										</a>
+									</div>
 								</div>
 							</div>
 							<div th:if="${article.body}" class='py-3 mt-4 px-2 text-break' style='border: dashed lightgray; border-width: 2px 0;'>

@@ -51,8 +51,8 @@
 		FROM article
 		JOIN user ON user_id = user.id
 		JOIN category ON category_id = category.id
-		JOIN article_tag ON article.id = article_tag.article_id
-		JOIN tag ON article_tag.tag_id = tag.id
+		LEFT JOIN article_tag ON article.id = article_tag.article_id
+		LEFT JOIN tag ON article_tag.tag_id = tag.id
 		WHERE article.id = #{articleId}
 	</select>
 	
@@ -60,10 +60,13 @@
 		SELECT 
 			article.id, user_id, category_id, title, link, summary, body, article.created, updated,
 			user.id AS us_id, profile_image_id,
-			category.id AS ca_id, category_name
+			category.id AS ca_id, category_name,
+			tag.id AS ta_id, tag_name 
 		FROM article
 		JOIN user ON user_id = user.id
 		JOIN category ON category_id = category.id
+		LEFT JOIN article_tag ON article.id = article_tag.article_id
+		LEFT JOIN tag ON article_tag.tag_id = tag.id
 	</select>
 	
 	<insert id="insertOne" parameterType="com.example.demo.domain.entity.Article">

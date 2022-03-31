@@ -9,39 +9,39 @@
 		<div class='pattern-cross-dots-lg'>
 			<div style='background: rgba(235,235,235,0.70);'>
 				<div class='col-md-8 mx-auto py-5 border shadow px-4 px-sm-5 bg-white' style='min-height: 750px'>
-					<h1 th:text="${articleId} ? 'Edit Article' : 'New Article'" class="fw-bold mb-4" style='font-family: cursive;'></h1>
+					<h1 th:text="${articleId} ? 'Edit Article' : 'New Article'" class="fw-bold mb-5" style='font-family: cursive;'></h1>
 		      <form method="post" th:action="${articleId} ? @{/articles/edit} : @{/articles/new}" th:object="${articleForm}">
-		      	<div class="mb-4">
+		      	<div class="mb-3">
 		      		<label for="title" class="fw-bold mb-2">Title</label>
 		      		<input type="text" th:field="*{title}" class="form-control">
 		      		<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
 		      	</div>
-		      	<div class="mb-4 col-10">
+		      	<div class="mb-3 col-10">
 		      		<label for="link" class="fw-bold mb-2">Link</label>
 		      		<input type="text" th:field="*{link}" class="form-control">
 		      		<div th:if="${#fields.hasErrors('link')}" th:errors="*{link}" class="text-danger"></div>
 		      	</div>
-		      	<div class="mb-4">
+		      	<div class="mb-3 col-4">
 		      		<label for="link" class="fw-bold mb-2">Category</label>
 		      		<input type="text" th:field="*{categoryName}" class="form-control">
 		      		<div th:if="${#fields.hasErrors('categoryName')}" th:errors="*{categoryName}" class="text-danger"></div>
 		      	</div>
-		      	<div class="mb-4">
+		      	<div class="mb-3 col-10">
 		      	 	<label for="link" class="fw-bold mb-2">Tags</label>
-		      		<input type="text" th:field="*{tagNames}" class="form-control">
+		      		<input type="text" th:field="*{tagNames}" class="form-control" placeholder="複数追加できます">
 		      		<div th:if="${#fields.hasErrors('tagNames')}" th:errors="*{tagNames}" class="text-danger"></div>
 		      	</div>
-		      	<div class="mb-4">
+		      	<div class="mb-3">
 		      	 	<label for="summary" class="fw-bold mb-2">Summary</label>
 		      		<textarea th:field="*{summary}" class="form-control" rows="5" placeholder="概要や感想などを記述"></textarea>
 		      		<div th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}" class="text-danger"></div>
 		      	</div>
-		      	<div class="mb-4">
+		      	<div class="mb-3">
 		      		<label for="body" class="fw-bold mb-2">Body</label>
 		      		<textarea th:field="*{body}" class="form-control" rows="10" placeholder="補完や補足などを記述"></textarea>
 		      		<div th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="text-danger"></div>
 		      	</div>
-		      	<div class="mb-4">
+		      	<div class="mb-3">
 		      		<input th:if="${articleId}" type="hidden" name="articleId" th:value="${articleId}">
 		      		<button th:text="${articleId} ? 'Update Article' : 'Create Article'" type="submit" class="btn btn-success"></button>
 		      	</div>

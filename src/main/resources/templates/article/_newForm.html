@@ -10,33 +10,32 @@
 		<a class="fw-bold" th:href="@{/articles/new}">投稿フォーム拡大</a>
 		<div class="px-3">
 			<form method="post" th:action="@{/articles/new}" th:object="${articleForm}">
-				<div class="mb-4">
+				<div class="mb-3">
 					<label for="title mb-2" class="fw-bold mb-2">Title</label>
 					<input type="text" th:field="*{title}" class="form-control">
 					<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
 				</div>
-				<div class="mb-4 col-10">
+				<div class="mb-3 col-10">
 					<label for="link" class="fw-bold mb-2">Link</label>
 					<input type="text" th:field="*{link}" class="form-control">
 					<div th:if="${#fields.hasErrors('link')}" th:errors="*{link}" class="text-danger"></div>
 				</div>
-				<div class="mb-4">
-					<!-- カテゴリー -->
+				<div class="mb-3 col-9">
+					<label for="link" class="fw-bold mb-2">Category</label>
+					<input type="text" th:field="*{categoryName}" class="form-control">
+					<div th:if="${#fields.hasErrors('categoryName')}" th:errors="*{categoryName}" class="text-danger"></div>
 				</div>
-				<div class="mb-4">
-					<!-- タグ -->
+				<div class="mb-3">
+					<label for="link" class="fw-bold mb-2">Tags</label>
+					<input type="text" th:field="*{tagNames}" class="form-control" placeholder="複数追加できます">
+					<div th:if="${#fields.hasErrors('tagNames')}" th:errors="*{tagNames}" class="text-danger"></div>
 				</div>
-				<div class="mb-4">
+				<div class="mb-3">
 					<label for="summary" class="fw-bold mb-2">Summary</label>
-					<textarea th:field="*{summary}" class="form-control" rows="5" placeholder="概要や感想などを記述"></textarea>
+					<textarea th:field="*{summary}" class="form-control" rows="8" placeholder="概要や感想などを記述"></textarea>
 					<div th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}" class="text-danger"></div>
 				</div>
-				<div class="mb-4">
-					<label for="body" class="fw-bold mb-2">Body</label>
-					<textarea th:field="*{body}" class="form-control" rows="10" placeholder="補完や補足などを記述"></textarea>
-					<div th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="text-danger"></div>
-				</div>
-				<div class="mb-4">
+				<div class="mb-3">
 					<input th:if="${articleId}" type="hidden" name="articleId" th:value="${articleId}">
 					<button type="submit" class="btn btn-success">Create Article</button>
 				</div>

@@ -19,6 +19,11 @@
 		<result column="take_favorite_count" property="takeFavoriteCount"/>
 	</resultMap>
 	
+	<resultMap type="com.example.demo.domain.entity.Category" id="category">
+		<id column="ca_id" property="categoryId"/>
+		<result column="category_name" property="categoryName"/>
+	</resultMap>
+	
 	<resultMap type="com.example.demo.domain.entity.Article" id="article">
 		<id column="id" property="articleId"/>
 		<result column="user_id" property="userId"/>
@@ -29,6 +34,11 @@
 		<result column="created" property="created"/>
 		<result column="updated" property="updated"/>
 		<association property="user" resultMap="user"/>
+		<association property="category" resultMap="category"/>
+		<collection property="tags" ofType="com.example.demo.domain.entity.Tag">
+			<id column="ta_id" property="tagId" />
+			<result column="tag_name" property="tagName" />
+		</collection>
 	</resultMap>
 	
 	<insert id="insertOne" parameterType="com.example.demo.domain.entity.User">
@@ -109,17 +119,29 @@
 	<select id="selectPostArticles" parameterType="int" resultMap="article">
 		SELECT 
 			article.id, user_id, title, link, summary, body, article.created, updated,
-			profile_image_id 
+			profile_image_id,
+			category.id AS ca_id, category_name,
+			tag.id AS ta_id, tag_name 
 		FROM article
 		JOIN user ON user_id = user.id
+		JOIN category ON category_id = category.id
+		LEFT JOIN article_tag ON article.id = article_tag.article_id
+		LEFT JOIN tag ON article_tag.tag_id = tag.id
 		WHERE article.user_id = #{userId}
 	</select>
 	
 	<select id="selectBookmarkArticle" parameterType="int" resultMap="article">
-		SELECT *
+		SELECT
+			article.id, article.user_id, title, link, summary, body, article.created, updated,
+			profile_image_id,
+			category.id AS ca_id, category_name,
+			tag.id AS ta_id, tag_name 
 		FROM bookmark
-		JOIN article ON article_id = article.id
+		JOIN article ON bookmark.article_id = article.id
 		JOIN user ON article.user_id = user.id
+		JOIN category ON category_id = category.id
+		LEFT JOIN article_tag ON article.id = article_tag.article_id
+		LEFT JOIN tag ON article_tag.tag_id = tag.id
 		WHERE bookmark.user_id = #{userId}
 	</select>
 	

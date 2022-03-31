@@ -13,4 +13,6 @@ INSERT INTO article(user_id, category_id, title, link, summary, created, updated
 
 INSERT INTO article_tag(article_id, tag_id) VALUES
 (1, 1),
-(1, 2);
+(1, 2),
+(2, 1),
+(3, 2);
