@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.example.demo.domain.repository.mybatis.TagMapper">
+
+	<resultMap type="com.example.demo.domain.entity.Tag" id="tag">
+		<id column="id" property="tagId"/>
+		<result column="tag_name" property="tagName"/>
+	</resultMap>
+
+	<select id="findAllByDuplicateName" resultMap="tag">
+		SELECT *
+		FROM tag
+		WHERE tag_name IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<insert id="insertAll">
+		INSERT INTO tag(tag_name)
+		VALUES
+		<foreach item="item" index="index" collection="list" open="("
+			separator="),(" close=")">
+			#{item.tagName}
+		</foreach>
+	</insert>
+	
+	<select id="findAllByArticleId" parameterType="int" resultMap="tag">
+		SELECT *
+		FROM tag
+		JOIN article_tag ON tag.id = tag_id
+		WHERE article_id = #{articleId}
+	</select>
+	
+</mapper>

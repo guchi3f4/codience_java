@@ -22,9 +22,15 @@
 		      		<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
 		      	</div>
 		      	<div class="mb-4">
-		      		<label class="mb-2 fw-bold" for="email">Password</label>
+		      		<label class="mb-2 fw-bold" for="password">Password</label><span>（6文字以上）</span>
 		      		<input type="text" th:field="*{password}" class="form-control">
 		      		<div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
+		      	</div>
+		      	<div class="mb-4">
+		      		<label class="mb-2 fw-bold" for="passwordConfirmation">Password</label><span>（確認用）</span>
+		      		<input type="text" th:field="*{passwordConfirmation}" class="form-control">
+		      		<div th:if="${#fields.hasErrors('passwordConfirmation')}" th:errors="*{passwordConfirmation}" class="text-danger"></div>
+		      		<div th:if="${#fields.hasErrors('passwordValid')}" th:errors="*{passwordValid}" class="text-danger"></div>
 		      	</div>
 		      	<div class="mb-4">
 		      		<button type="submit" class="btn btn-success">sigun up</button>

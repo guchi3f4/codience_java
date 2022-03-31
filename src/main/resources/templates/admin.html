@@ -5,8 +5,31 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div th:fragment="admin_contents">
+	
 		<h1>管理者用画面</h1>
-	</div>
+		<div>
+        <a href="#" onclick="frag001Click();">ajax fragments</a><br />
+    </div>
+    <div id="frag1" th:fragment="sample-fragment">
+        <span th:text="${now}"></span>
+    </div>
+    <script type="text/javascript">
+function frag001Click() {
+   var frag1 = document.querySelector('div#frag1');
+   
+   fetch("/articles/favorites/test", {
+       method: "get",
+       type: "html",
+       data: {
+    	   articleId: 1
+       }
+   }).then(response => {
+       return response.text();
+   }).then(body => {
+       frag1.outerHTML = body;
+   });
+}
+</script>
+
 </body>
 </html>

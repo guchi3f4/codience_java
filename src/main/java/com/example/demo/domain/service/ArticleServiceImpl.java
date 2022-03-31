@@ -2,18 +2,21 @@ package com.example.demo.domain.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.entity.Article;
-import com.example.demo.domain.repository.ArticleDao;
+import com.example.demo.domain.repository.mybatis.ArticleMapper;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ArticleServiceImpl implements ArticleService {
 	
-	private final ArticleDao dao;
+	private final ArticleMapper dao;
 	
 	@Override
 	public Article selectOne(int articleId) {
@@ -26,33 +29,32 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public boolean insertOne(Article article) {
+	public int insertOne(Article article) {
+		
 		int num = dao.insertOne(article);
-		if(num > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		
+		return num;
 	}
 
 	@Override
-	public boolean updateOne(Article article) {
+	public int updateOne(Article article) {
 		int num = dao.updateOne(article);
-		if(num > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		
+		return num;
+		
 	}
 
 	@Override
-	public boolean deleteOne(int articleId) {
+	public int deleteOne(int articleId) {
 		int num = dao.deleteOne(articleId);
-		if(num > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		
+		return num;
+	}
+
+	@Override
+	public Article selectLastRecord() {
+		
+		return dao.selectLastRecord();
 	}
 	
 }

@@ -6,10 +6,25 @@
 </head>
 <body>
 	<div th:fragment="userInfo_component">
+	
+		<th:block th:if="${#httpServletRequest.requestURI} != @{/users}">
+			<div class="row">
+				<h3 class='mb-3 col-6'>User Info</h3>
+				<div class='col-6 text-end'>
+					<a th:href="@{/users/{id}/edit(id=${user.userId})}" class="text-decoration-none">
+						<span class='circle-btn rounded-circle shadow py-2 px-2 me-2 text-secondary fas fa-user-cog' style='width: 35px; height: 35px;'></span>
+					</a>
+					<a th:href="@{/articles/new}">
+						<span class='circle-btn rounded-circle shadow py-2 px-2 text-secondary fas fa-pencil-alt' style='width: 35px; height: 35px;'></span>
+					</a>
+				</div>
+			</div>
+		</th:block>
+		
     <div class='py-4 px-2 text-center h-100 text-nowrap' style='border: 1px solid lightgray; border-radius: 15%;' onMouseOut="this.style.boxShadow='';" onMouseOver="this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.2)'">
 		  <div class='row pb-4'>
 		    <div class='col-6 text-end'>
-		    	 <img class="attachment user profile_image rounded-circle" th:src="${user.profileImageId} ? ${'data:image/png;base64,' + user.getImgOut} : @{/images/no_image.jpg}" width="100" height="100">
+		    	 <img class="attachment user profile_image rounded-circle" th:src="${user.profileImageId} ? @{'/profileImageId/' + ${user.profileImageId}} : @{/images/no_image.jpg}" width="100" height="100">
 		    </div>
 		    <div class='col-6 text-start pt-4'>
 		    	<a th:href="@{/users/} + ${user.userId}" th:text="${user.name}"
@@ -21,25 +36,31 @@
 		    <div class='row fw-bold' style='color: #45494D'>
 		      <div class='col-5 offset-1 border-bottom border-top py-2'>
 		        <span class='font-italic'>followers</span><br>
+		        <a th:href="@{/articles}">0</a>
 		      </div>
 		      <div class='col-5 border-bottom border-top py-2'>
 		        <span class='font-italic'>followes</span><br>
+		        <a th:href="@{/articles}">0</a>
 		      </div>
 		    </div>
 		    <div class='row fw-bold' style='color: #45494D'>
 		      <div class='col-5 offset-1 border-bottom py-2'>
 		        <span class='font-italic'>投稿</span><br>
+		        <a th:href="@{/users/{id}/posts(id=${user.userId})}" th:text="${user.postCount}"></a>
 		      </div>
 		      <div class='col-5 border-bottom py-2'>
 		        <span class='font-italic'>ブックマーク</span><br>
+		        <a th:href="@{/users/{id}/bookmarks(id=${user.userId})}" th:text="${user.giveBookmarkCount}"></a>
 		      </div>
 		    </div>
 		    <div class='row fw-bold' style='color: #45494D'>
 		      <div class='col-5 offset-1 border-bottom py-2'>
-		        <span class='font-italic'>被いいね</span><br> <!--他ユーザーからいいねされた数の総数-->
+		        <span class='font-italic'>被いいね</span><br> <!-- 他ユーザーからいいねされた数の総数 -->
+		        <a th:href="@{/users/{id}/posts(id=${user.userId})}" th:text="${user.takeFavoriteCount}"></a>
 		      </div>
 		      <div class='col-5 border-bottom py-2'>
-		        <span class='font-italic' style='font-size: 15px;'>被ブックマーク</span><br> <!--他ユーザーからブックマークされた数の総数-->
+		        <span class='font-italic' style='font-size: 15px;'>被ブックマーク</span><br> <!-- 他ユーザーからブックマークされた数の総数 -->
+		        <a th:href="@{/users/{id}/posts(id=${user.userId})}" th:text="${user.takeBookmarkCount}"></a>
 		      </div>
 		    </div>
 		    <div class='px-2'>

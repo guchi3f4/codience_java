@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="favorite" th:id="favorite + ${article.articleId}">
+	
+		<th:block sec:authorize="isAuthenticated()">
+		
+			<th:block th:if="${myFavorites.contains(article.articleId) == true}">
+				<form method="post" th:action="@{/articles/favorites/delete}">
+					<input type="hidden" name="articleId" th:value="${article.articleId}">
+					<button th:id="favoriteDelete + ${article.articleId}" type="button" class="btn btn-link p-0"><i class="far fa-thumbs-up text-danger"></i></button>
+				</form>
+			</th:block>
+			
+			<th:block th:if="${myFavorites.contains(article.articleId) == false}">
+				<form method="get" th:action="@{/articles/favorites/new}">
+					<input type="hidden" name="articleId" th:value="${article.articleId}">
+					<button th:id="favoriteCreate + ${article.articleId}" type="button" class="btn btn-link p-0"><i class="far fa-thumbs-up"></i></button>
+				</form>
+			</th:block>
+			
+		</th:block>
+		
+		<th:block sec:authorize="!isAuthenticated()">
+			<i class="far fa-thumbs-up text-primary"></i>
+		</th:block>
+		
+		<script type="text/javascript">
+			$(document).on('click', '#favoriteDelete[[${article.articleId}]]', function(){
+				
+			   fetch("/articles/favorites/delete/[[${article.articleId}]]", {
+			       method: "get",
+			       type: "html",
+			   }).then(response => {
+			       return response.text();
+			   }).then(body => {
+				   document.querySelector('#favorite[[${article.articleId}]]').outerHTML = body;
+			   });
+			})
+			
+			$(document).on('click', '#favoriteCreate[[${article.articleId}]]', function(){
+			   
+			   fetch("/articles/favorites/new/[[${article.articleId}]]", {
+			       method: "get",
+			       type: "html",
+			   }).then(response => {
+			       return response.text();
+			   }).then(body => {
+				   document.querySelector('#favorite[[${article.articleId}]]').outerHTML = body;
+			   });
+			})
+		</script>
+	</div>
+</body>
+</html>

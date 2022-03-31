@@ -43,14 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		// ログイン不要ページの設定
         http.authorizeRequests()
-            .antMatchers("/webjars/**").permitAll()
-            .antMatchers("/css/**").permitAll()
-            .antMatchers("/login").permitAll()
-            .antMatchers("/signup").permitAll()
-            .antMatchers("/h2-console").permitAll()
-            .antMatchers("/users/admin").hasAuthority("ROLE_ADMIN")
+            .antMatchers("/articles/new").authenticated()
             .anyRequest().permitAll();
-//            .anyRequest().authenticated(); 
         
         //ログイン処理
         http.formLogin()
@@ -65,6 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         	.logoutRequestMatcher(new AntPathRequestMatcher("/logout")) //GETメソッドでリクエストを送る場合
         	//.logoutUrl("/logout") //POSTメソッドでリクエストを送る場合
         	.logoutSuccessUrl("/login");
+        
+        http.csrf().disable();
 	}
 
 	@Override

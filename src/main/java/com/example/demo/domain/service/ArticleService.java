@@ -10,10 +10,12 @@ public interface ArticleService {
 	
 	public List<Article> selectAll();
 	
-	public boolean insertOne(Article article);
+	public int insertOne(Article article);
 	
-	public boolean updateOne(Article article);
+	public int updateOne(Article article);
 	
-	public boolean deleteOne(int articleId);
+	public int deleteOne(int articleId);
+	
+	public Article selectLastRecord();
 
 }

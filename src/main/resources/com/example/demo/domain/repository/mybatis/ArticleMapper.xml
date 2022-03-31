@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.example.demo.domain.repository.mybatis.ArticleMapper">
+	<resultMap type="com.example.demo.domain.entity.User" id="user">
+		<id column="us_id" property="userId"/>
+		<result column="name" property="name"/>
+		<result column="email" property="email"/>
+		<result column="password" property="password"/>
+		<result column="introduction" property="introduction"/>
+		<result column="profile_image_id" property="profileImageId"/>
+		<result column="created" property="created"/>
+		<result column="role" property="role"/>
+		<!-- 集計 -->
+		<result column="give_bookmark_count" property="giveBookmarkCount"/>
+		<result column="post_count" property="postCount"/>
+		<result column="take_bookmark_count" property="takeBookmarkCount"/>
+		<result column="take_favorite_count" property="takeFavoriteCount"/>
+	</resultMap>
+	
+	<resultMap type="com.example.demo.domain.entity.Category" id="category">
+		<id column="ca_id" property="categoryId"/>
+		<result column="category_name" property="categoryName"/>
+	</resultMap>
+	
+	<resultMap type="com.example.demo.domain.entity.Article" id="article">
+		<id column="id" property="articleId"/>
+		<result column="user_id" property="userId"/>
+		<result column="category_id" property="categoryId"/>
+		<result column="title" property="title"/>
+		<result column="link" property="link"/>
+		<result column="summary" property="summary"/>
+		<result column="body" property="body"/>
+		<result column="created" property="created"/>
+		<result column="updated" property="updated"/>
+		<association property="user" resultMap="user"/>
+		<association property="category" resultMap="category"/>
+		<collection property="tags" ofType="com.example.demo.domain.entity.Tag">
+			<id column="ta_id" property="tagId" />
+			<result column="tag_name" property="tagName" />
+		</collection>
+	</resultMap>
+	
+	<select id="selectOne" parameterType="int" resultMap="article">
+		SELECT 
+			article.id, user_id, category_id, title, link, summary, body, article.created, updated,
+			user.id AS us_id, profile_image_id,
+			category.id AS ca_id, category_name,
+			tag.id AS ta_id, tag_name 
+		FROM article
+		JOIN user ON user_id = user.id
+		JOIN category ON category_id = category.id
+		JOIN article_tag ON article.id = article_tag.article_id
+		JOIN tag ON article_tag.tag_id = tag.id
+		WHERE article.id = #{articleId}
+	</select>
+	
+	<select id="selectAll" resultMap="article">
+		SELECT 
+			article.id, user_id, category_id, title, link, summary, body, article.created, updated,
+			user.id AS us_id, profile_image_id,
+			category.id AS ca_id, category_name
+		FROM article
+		JOIN user ON user_id = user.id
+		JOIN category ON category_id = category.id
+	</select>
+	
+	<insert id="insertOne" parameterType="com.example.demo.domain.entity.Article">
+		INSERT INTO article (
+			user_id, category_id, title, link, summary, body, created, updated
+		)
+		VALUES (
+			#{userId}, #{categoryId}, #{title}, #{link}, #{summary}, #{body}, #{created}, #{updated}
+		)
+	</insert>
+	
+	<update id="updateOne" parameterType="com.example.demo.domain.entity.Article">
+		UPDATE article
+		SET title = #{title}, category_id = #{categoryId}, link = #{link}, summary = #{summary}, body = #{body}, updated = #{updated}
+		WHERE id = #{articleId}
+	</update>
+	
+	<delete id="deleteOne" parameterType="int">
+		DELETE FROM article WHERE id = #{articleId}
+	</delete>
+	
+	<select id="selectLastRecord" resultMap="article">
+		SELECT * FROM article
+		ORDER BY id DESC
+		LIMIT 1;
+	</select>
+</mapper>

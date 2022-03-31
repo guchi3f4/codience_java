@@ -16,4 +16,10 @@ public class ArticleForm {
 	private String summary;
 	
 	private String body;
+	
+	@NotNull
+	private String categoryName;
+	
+	@NotNull
+	private String tagNames;
 }

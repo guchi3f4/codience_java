@@ -2,6 +2,7 @@ package com.example.demo.domain.repository;
 
 import java.util.List;
 
+import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.entity.User;
 
 public interface UserDao {
@@ -13,4 +14,10 @@ public interface UserDao {
 	public List<User> selectMany();
 	
 	public int updateOne(User user);
+	
+	public String selectEmail(String email);
+	
+	public List<Article> selectPostArticles(int userId);
+	
+	public List<Article> selectBookmarkArticle(int userId);
 }

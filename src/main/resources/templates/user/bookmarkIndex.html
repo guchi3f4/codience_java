@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="bookmarkIndex_contents">
+		<div class='pattern-cross-dots-lg'>
+			<div style='background: rgba(235, 235, 235, 0.70);'>
+				<div class='col-md-10 mx-auto py-5 border shadow px-5 bg-white' style='min-height: 750px'>
+					<div class='d-flex align-items-center flex-wrap justify-content-center'>
+						<h1 class='fw-bold mr-3' style='font-family: cursive;'>User Page</h1>
+						<h4 th:text="${user.name}" class='text-line d-sm-flex fst-italic'></h4>
+					</div>
+					<p class='text-line d-flex fw-bold fst-italic justify-content-center pt-2 mb-5' style='font-size: 17px; color: #45494D;'>ブックマーク一覧</p>
+					<div class="row">
+						<!-- サイドバー -->
+						<div class='col-md-5 col-lg-4'>
+							<th:block th:if="${user}">
+								<div th:include="user/_userInfo :: userInfo_component" class="mb-4"></div>
+							</th:block>
+							<th:block sec:authorize="isAuthenticated()">
+								<div th:include="article/_newForm :: newForm"></div>
+							</th:block>
+							<th:block sec:authorize="!isAuthenticated()">
+								<div th:include="user/_signup :: signupForm"></div>
+							</th:block>
+						</div>
+						<!-- メインコンテンツ -->
+						<div class='col-md-7 col-lg-8'>
+							<h2 class='fw-bold mb-4' style='font-family: cursive;'>Bookmarked Articles</h2>
+							<div th:each="article : ${articleList}" class='container-md rounded py-3 mb-3'
+								style='border: 2px solid lightgray;' onMouseOut="this.style.boxShadow='';"
+								onMouseOver="this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.2)'">
+								<h5><a th:href="@{/articles/{id}(id=${article.articleId})}" th:text="${article.title}" class='fw-bold text-body'></a></h5>
+								<div class='row border-bottom pb-2'>
+									<div class='col-8 col-sm-9 text-truncate'>
+										<i class="fas fa-link"></i> <a th:href="${article.link}" th:text="${article.link}"></a>
+									</div>
+									<div class='col-2 pl-0 text-end text-nowrap'>
+										<div th:replace="bookmark/_bookmark :: bookmark"></div>
+									</div>
+									<div class=' col-2 col-sm-1 px-0 text-nowrap'>
+										<div th:replace="favorite/_favorite :: favorite"></div>
+									</div>
+								</div>
+								<div class='row mb-2 py-2'>
+									<div class='col-md-2 px-3 pb-1 pr-md-0 pl-md-3'>
+										<img class="attachment user profile_image rounded-circle"
+											th:src="${article.user.profileImageId} ? ${'data:image/png;base64,' + article.user.getImgOut} : @{/images/no_image.jpg}"
+											width="50" height="50">
+									</div>
+									<div th:text="${article.summary}" class='col-md-10 px-3 px-lg-0 mx-auto'></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

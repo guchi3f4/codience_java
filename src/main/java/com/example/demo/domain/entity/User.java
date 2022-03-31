@@ -1,8 +1,6 @@
 package com.example.demo.domain.entity;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -18,13 +16,15 @@ public class User implements UserDetails {
 	private String email;
 	private String password;
 	private String introduction;
-	private byte[] profileImageId;
+	private String profileImageId;
 	private LocalDateTime created;
 	private String role = "ROLE_GENERAL";
 	
-	public String getImgOut() throws IOException{
-        return Base64.getEncoder().encodeToString(this.profileImageId);
-    }
+	//該当ユーザーに関連する集計情報
+	private long postCount;
+	private long giveBookmarkCount;
+	private long takeBookmarkCount;
+	private long takeFavoriteCount;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

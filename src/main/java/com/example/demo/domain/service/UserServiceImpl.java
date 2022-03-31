@@ -2,10 +2,12 @@ package com.example.demo.domain.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.domain.entity.Article;
 import com.example.demo.domain.entity.User;
-import com.example.demo.domain.repository.UserDao;
+import com.example.demo.domain.repository.mybatis.UserMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,11 +15,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 	
-	private final UserDao dao;
+	private final UserMapper userMapper;
+	
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public boolean insertOne(User user) {
-		 int num = dao.insertOne(user);
+		
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
+		 int num = userMapper.insertOne(user);
 		 if(num > 0) {
 			 return true;
 		 } else {
@@ -27,17 +34,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User selectOne(int userId) {
-		return dao.selectOne(userId);
+		return userMapper.selectOne(userId);
 	}
 
 	@Override
 	public List<User> selectMany() {
-		return dao.selectMany();
+		return userMapper.selectMany();
 	}
 
 	@Override
 	public boolean updateOne(User user) {
-		int num = dao.updateOne(user);
+		int num = userMapper.updateOne(user);
 		 if(num > 0) {
 			 return true;
 		 } else {
@@ -45,4 +52,20 @@ public class UserServiceImpl implements UserService {
 		 }
 	}
 
+	@Override
+	public String selectEmail(String email) {
+		return userMapper.selectEmail(email);
+	}
+
+	@Override
+	public List<Article> selectPostArticles(int userId) {
+		
+		return userMapper.selectPostArticles(userId);
+	}
+
+	@Override
+	public List<Article> selectBookmarkArticle(int userId) {
+		
+		return userMapper.selectBookmarkArticle(userId);
+	}
 }

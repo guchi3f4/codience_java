@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.example.demo.domain.repository.mybatis.CategoryMapper">
+
+	<resultMap type="com.example.demo.domain.entity.Category" id="category">
+		<id column="id" property="categoryId"/>
+		<result column="category_name" property="categoryName"/>
+	</resultMap>
+	
+	<select id="findOne" parameterType="String" resultMap="category">
+		SELECT id, category_name
+		FROM category
+		WHERE category_name = #{categoryName}
+	</select>
+	
+	<insert id="insertOne" parameterType="com.example.demo.domain.entity.Category">
+		INSERT INTO category (
+			category_name
+		)
+		VALUES (
+			#{categoryName}
+		)
+	</insert>
+	
+</mapper>

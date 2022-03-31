@@ -12,29 +12,33 @@
 					<h1 th:text="${articleId} ? 'Edit Article' : 'New Article'" class="fw-bold mb-4" style='font-family: cursive;'></h1>
 		      <form method="post" th:action="${articleId} ? @{/articles/edit} : @{/articles/new}" th:object="${articleForm}">
 		      	<div class="mb-4">
-		      		<label for="title">Title</label>
+		      		<label for="title" class="fw-bold mb-2">Title</label>
 		      		<input type="text" th:field="*{title}" class="form-control">
 		      		<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
 		      	</div>
-		      	<div class="mb-4">
-		      		<label for="link">Link</label>
+		      	<div class="mb-4 col-10">
+		      		<label for="link" class="fw-bold mb-2">Link</label>
 		      		<input type="text" th:field="*{link}" class="form-control">
 		      		<div th:if="${#fields.hasErrors('link')}" th:errors="*{link}" class="text-danger"></div>
 		      	</div>
 		      	<div class="mb-4">
-		      		<!-- カテゴリー -->
+		      		<label for="link" class="fw-bold mb-2">Category</label>
+		      		<input type="text" th:field="*{categoryName}" class="form-control">
+		      		<div th:if="${#fields.hasErrors('categoryName')}" th:errors="*{categoryName}" class="text-danger"></div>
 		      	</div>
 		      	<div class="mb-4">
-		      	 <!-- タグ -->
+		      	 	<label for="link" class="fw-bold mb-2">Tags</label>
+		      		<input type="text" th:field="*{tagNames}" class="form-control">
+		      		<div th:if="${#fields.hasErrors('tagNames')}" th:errors="*{tagNames}" class="text-danger"></div>
 		      	</div>
 		      	<div class="mb-4">
-		      	 	<label for="summary">Summary</label>
-		      		<textarea th:field="*{summary}" class="form-control" rows="5"></textarea>
+		      	 	<label for="summary" class="fw-bold mb-2">Summary</label>
+		      		<textarea th:field="*{summary}" class="form-control" rows="5" placeholder="概要や感想などを記述"></textarea>
 		      		<div th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}" class="text-danger"></div>
 		      	</div>
 		      	<div class="mb-4">
-		      		<label for="body">Body</label>
-		      		<textarea th:field="*{body}" class="form-control" rows="10"></textarea>
+		      		<label for="body" class="fw-bold mb-2">Body</label>
+		      		<textarea th:field="*{body}" class="form-control" rows="10" placeholder="補完や補足などを記述"></textarea>
 		      		<div th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="text-danger"></div>
 		      	</div>
 		      	<div class="mb-4">

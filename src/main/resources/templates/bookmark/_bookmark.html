@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="bookmark" th:id="bookmark + ${article.articleId}">
+	
+		<th:block sec:authorize="isAuthenticated()">
+		
+			<th:block th:if="${myBookmarks.contains(article.articleId) == true}">
+				<form method="post" th:action="@{/articles/bookmarks/delete}">
+					<input type="hidden" name="articleId" th:value="${article.articleId}">
+					<button th:id="bookmarkDelete + ${article.articleId}" type="button" class="btn btn-link p-0"><i class="far fa-bookmark text-danger"></i></button>
+				</form>
+			</th:block>
+			
+			<th:block th:if="${myBookmarks.contains(article.articleId) == false}">
+				<form method="post" th:action="@{/articles/bookmarks/new}">
+					<input type="hidden" name="articleId" th:value="${article.articleId}">
+					<button th:id="bookmarkCreate + ${article.articleId}" type="button" class="btn btn-link p-0"><i class="far fa-bookmark"></i></button>
+				</form>
+			</th:block>
+			
+		</th:block>
+		
+		<th:block sec:authorize="!isAuthenticated()">
+			<i class="far fa-bookmark text-primary"></i>
+		</th:block>
+		
+		<script type="text/javascript">
+			$(document).on('click', '#bookmarkDelete[[${article.articleId}]]', function(){
+				
+			   fetch("/articles/bookmarks/delete/[[${article.articleId}]]", {
+			       method: "get",
+			       type: "html",
+			   }).then(response => {
+			       return response.text();
+			   }).then(body => {
+				   document.querySelector('#bookmark[[${article.articleId}]]').outerHTML = body;
+			   });
+			})
+			
+			$(document).on('click', '#bookmarkCreate[[${article.articleId}]]', function(){
+			   
+			   fetch("/articles/bookmarks/new/[[${article.articleId}]]", {
+			       method: "get",
+			       type: "html",
+			   }).then(response => {
+			       return response.text();
+			   }).then(body => {
+				   document.querySelector('#bookmark[[${article.articleId}]]').outerHTML = body;
+			   });
+			})
+		</script>
+	</div>
+</body>
+</html>

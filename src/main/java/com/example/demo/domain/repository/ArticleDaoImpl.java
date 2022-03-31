@@ -37,7 +37,7 @@ public class ArticleDaoImpl implements ArticleDao {
 		
 		var user = new User();
 		user.setUserId((int)result.get("user_id"));
-		user.setProfileImageId((byte[])result.get("profile_image_id"));
+		user.setProfileImageId((String)result.get("profile_image_id"));
 		
 		article.setUser(user);
 		
@@ -63,7 +63,7 @@ public class ArticleDaoImpl implements ArticleDao {
 			
 			var user = new User();
 			user.setUserId((int)result.get("user_id"));
-			user.setProfileImageId((byte[])result.get("profile_image_id"));
+			user.setProfileImageId((String)result.get("profile_image_id"));
 			
 			article.setUser(user);
 			list.add(article);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -8,47 +9,98 @@
 	<div th:fragment="articleDetail_contents">
 		<div class='pattern-cross-dots-lg'>
 			<div style='background: rgba(235, 235, 235, 0.70);'>
-				<div class='col-md-9 mx-auto py-5 border shadow px-4 px-sm-5 bg-white' style='min-height: 750px'>
+				<div class='col-md-10 mx-auto py-5 border shadow px-5 bg-white' style='min-height: 750px'>
 					<div class="row">
 						<!-- サイドバー -->
 						<div class='col-md-5 col-lg-4'>
-							<div th:include="user/_userInfo :: userInfo_component" class="mb-4"></div>
-							<div th:include="article/_newForm :: newForm"></div>
+							<th:block th:if="${user}">
+								<div th:include="user/_userInfo :: userInfo_component" class="mb-4"></div>
+							</th:block>
+							<th:block sec:authorize="isAuthenticated()">
+								<div th:include="article/_newForm :: newForm"></div>
+							</th:block>
+							<th:block sec:authorize="!isAuthenticated()">
+								<div th:include="user/_signup :: signupForm"></div>
+							</th:block>
 						</div>
 						<!-- メインコンテンツ -->
 						<div class='col-md-7 col-lg-8'>
 							<div class="row">
 								<h1 class='col-6 fw-bold mb-4' style='font-family: cursive;'>Article Detail</h1>
-								<div class="col-6 text-end text-nowrap pt-2 pr-4">
-									<a type="button" th:href="@{/articles/{id}/edit(id=${article.articleId})}" class="btn btn-success btn-sm me-2">Edit</a>
-									<form method="POST" th:action="@{/articles/delete}" class="d-inline-block">
-										<input type="hidden" name="articleId" th:value="${article.articleId}">
-										<input type="submit" value="Destroy" class="btn btn-danger btn-sm">
-									</form>
-								</div>
+								<th:block sec:authorize="isAuthenticated()" th:if="${#authentication.principal.userId == article.user.userId}">
+									<div class="col-6 text-end text-nowrap pt-2 pr-4">
+										<a type="button" th:href="@{/articles/{id}/edit(id=${article.articleId})}" class="btn btn-success btn-sm me-2">Edit</a>
+										<form method="POST" th:action="@{/articles/delete}" class="d-inline-block">
+											<input type="hidden" name="articleId" th:value="${article.articleId}">
+											<input type="submit" value="Destroy" class="btn btn-danger btn-sm">
+										</form>
+									</div>
+								</th:block>
 							</div>
 							<div class='container-md rounded py-3 mb-3'
 								style='border: 2px solid lightgray;' onMouseOut="this.style.boxShadow='';"
 								onMouseOver="this.style.boxShadow='0 0.5rem 1rem rgba(0,0,0,0.2)'">
-								<h5><a href="/" th:text="${article.title}" class='fw-bold text-body'></a></h5>
+								<h5><a th:href="@{/articles/{id}(id=${article.articleId})}" th:text="${article.title}" class='fw-bold text-body'></a></h5>
 								<div class='row border-bottom pb-2'>
 									<div class='col-8 col-sm-9 text-truncate'>
 										<i class="fas fa-link"></i> <a th:href="${article.link}" th:text="${article.link}"></a>
 									</div>
 									<div class='col-2 pl-0 text-end text-nowrap'>
-										<i class="far fa-bookmark"></i>
+										<div th:replace="bookmark/_bookmark :: bookmark"></div>
 									</div>
 									<div class=' col-2 col-sm-1 px-0 text-nowrap'>
-										<i class="far fa-thumbs-up"></i>
+										<div th:replace="favorite/_favorite :: favorite"></div>
 									</div>
 								</div>
 								<div class='row mb-2 py-2'>
 									<div class='col-md-2 px-3 pb-1 pr-md-0 pl-md-3'>
 										<img class="attachment user profile_image rounded-circle"
-											th:src="${article.user.profileImageId} ? ${'data:image/png;base64,' + article.user.getImgOut} : @{/images/no_image.jpg}"
+											th:src="${article.user.profileImageId} ? @{'/profileImageId/' + ${article.user.profileImageId}} : @{/images/no_image.jpg}"
 											width="50" height="50">
 									</div>
 									<div th:text="${article.summary}" class='col-md-10 px-3 px-lg-0 mx-auto'></div>
+								</div>
+							</div>
+							<div th:if="${article.body}" class='py-3 mt-4 px-2 text-break' style='border: dashed lightgray; border-width: 2px 0;'>
+								<div th:text="${article.body}"></div>
+							</div>
+							
+							<!-- コメント投稿フォーム -->
+							<h3>Comments</h3>
+							<form method="post" th:action="@{/articles/comments/new}" th:object="${commentForm}">
+								<div class="mb-3">
+									<div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}" class="text-danger"></div>
+									<textarea name="comment" th:value="*{comment}" rows="3" class="form-control"></textarea>
+								</div>
+								<div class="mb-3">
+									<input type="hidden" name="articleId" th:value="${article.articleId}">
+									<input sec:authorize="isAuthenticated()" type="submit" value="送信">
+									<p sec:authorize="!isAuthenticated()">コメントを投稿するには新規登録、ログインが必要です。</p>
+								</div>
+							</form>
+							
+							<!-- コメント一覧 -->
+							<div>
+								<div th:each="comment : ${commentList}" class='d-flex mb-4'>
+									<a th:href="@{/users/{id}(id=${comment.userId})}">
+										<img class="attachment user profile_image rounded-circle"
+											th:src="${comment.user.profileImageId} ? @{'/profileImageId/' + ${user.profileImageId}} : @{/images/no_image.jpg}"
+											width="50" height="50">
+									</a>
+									<div class="ps-3">
+										<a th:href="@{/users/{id}(id=${comment.userId})}"><span th:text="${comment.user.name}" class="text-dark"></span></a>
+										<p th:text="${comment.comment}"></p>
+									</div>
+									<div class="ms-auto">
+										
+										<th:block th:if="${comment.userId == #authentication.principal.userId}">
+											<form method="post" th:action="@{/articles/comments/delete}">
+												<input type="hidden" name="commentId" th:value="${comment.commentId}">
+												<input type="hidden" name="articleId" th:value="${comment.articleId}">
+												<button type="submit" class="btn btn-sm bg-danger text-white">Destroy</button>
+											</form>
+										</th:block>
+									</div>
 								</div>
 							</div>
 						</div>

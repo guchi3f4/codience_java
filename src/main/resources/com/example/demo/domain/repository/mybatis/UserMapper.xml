@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.example.demo.domain.repository.mybatis.UserMapper">
+	<resultMap type="com.example.demo.domain.entity.User" id="user">
+		<id column="id" property="userId"/>
+		<result column="name" property="name"/>
+		<result column="email" property="email"/>
+		<result column="password" property="password"/>
+		<result column="introduction" property="introduction"/>
+		<result column="profile_image_id" property="profileImageId"/>
+		<result column="created" property="created"/>
+		<result column="role" property="role"/>
+		<!-- 集計 -->
+		<result column="give_bookmark_count" property="giveBookmarkCount"/>
+		<result column="post_count" property="postCount"/>
+		<result column="take_bookmark_count" property="takeBookmarkCount"/>
+		<result column="take_favorite_count" property="takeFavoriteCount"/>
+	</resultMap>
+	
+	<resultMap type="com.example.demo.domain.entity.Article" id="article">
+		<id column="id" property="articleId"/>
+		<result column="user_id" property="userId"/>
+		<result column="title" property="title"/>
+		<result column="link" property="link"/>
+		<result column="summary" property="summary"/>
+		<result column="body" property="body"/>
+		<result column="created" property="created"/>
+		<result column="updated" property="updated"/>
+		<association property="user" resultMap="user"/>
+	</resultMap>
+	
+	<insert id="insertOne" parameterType="com.example.demo.domain.entity.User">
+		INSERT INTO user (
+			name, email, password, created
+		)
+		VALUES (
+			#{name}, #{email}, #{password}, #{created}
+		)
+	</insert>
+	
+	<select id="selectOne" parameterType="int" resultMap="user">
+		SELECT 
+			a.id, name, email, password, introduction, profile_image_id, created,
+			give_bookmark_count, post_count, take_bookmark_count, take_favorite_count
+		FROM (
+			SELECT
+				user.id, name, email, password, introduction, profile_image_id, created,
+				Count(bookmark.id) AS give_bookmark_count
+			FROM user
+			LEFT JOIN bookmark ON user.id = bookmark.user_id
+			GROUP BY user.id
+		) a
+		LEFT JOIN (
+			SELECT
+				user.id,
+				COUNT(article.id) AS post_count,
+				COUNT(bookmark.id) AS take_bookmark_count,
+				COUNT(favorite.id) AS take_favorite_count
+			FROM user
+			LEFT JOIN article ON user.id = article.user_id
+			LEFT JOIN bookmark ON article.id = bookmark.article_id
+			LEFT JOIN favorite ON article.id = favorite.article_id GROUP BY user.id
+		) b
+		ON a.id = b.id
+		WHERE a.id = #{userId}
+	</select>
+	
+	<select id="selectMany" resultMap="user">
+		SELECT 
+			a.id, name, email, password, introduction, profile_image_id, created,
+			give_bookmark_count, post_count, take_bookmark_count, take_favorite_count
+		FROM (
+			SELECT
+				user.id, name, email, password, introduction, profile_image_id, created,
+				Count(bookmark.id) AS give_bookmark_count
+			FROM user
+			LEFT JOIN bookmark ON user.id = bookmark.user_id
+			GROUP BY user.id
+		) a
+		LEFT JOIN (
+			SELECT
+				user.id,
+				COUNT(article.id) AS post_count,
+				COUNT(bookmark.id) AS take_bookmark_count,
+				COUNT(favorite.id) AS take_favorite_count
+			FROM user
+			LEFT JOIN article ON user.id = article.user_id
+			LEFT JOIN bookmark ON article.id = bookmark.article_id
+			LEFT JOIN favorite ON article.id = favorite.article_id GROUP BY user.id
+		) b
+		ON a.id = b.id
+	</select>
+	
+	<update id="updateOne" parameterType="com.example.demo.domain.entity.User">
+		UPDATE user
+		SET 
+			name = #{name},
+			introduction = #{introduction},
+			profile_image_id = #{profileImageId}
+		WHERE id = #{userId}
+	</update>
+	
+	<select id="selectEmail" parameterType="String" resultType="String">
+		SELECT email FROM user WHERE email = #{email}
+	</select>
+	
+	<select id="selectPostArticles" parameterType="int" resultMap="article">
+		SELECT 
+			article.id, user_id, title, link, summary, body, article.created, updated,
+			profile_image_id 
+		FROM article
+		JOIN user ON user_id = user.id
+		WHERE article.user_id = #{userId}
+	</select>
+	
+	<select id="selectBookmarkArticle" parameterType="int" resultMap="article">
+		SELECT *
+		FROM bookmark
+		JOIN article ON article_id = article.id
+		JOIN user ON article.user_id = user.id
+		WHERE bookmark.user_id = #{userId}
+	</select>
+	
+	<select id="selectSessionUser" parameterType="String" resultMap="user">
+		SELECT * FROM user WHERE email = #{email}
+	</select>
+</mapper>

@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.domain.repository.LoginDaoImpl;
+import com.example.demo.domain.repository.mybatis.UserMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,11 +13,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserDetailServiceImpl implements UserDetailsService {
 	
-	private final LoginDaoImpl dao;
+	private final  UserMapper userMapper;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return dao.selectSessionUser(username);
+		return userMapper.selectSessionUser(username);
 	}
 
 }

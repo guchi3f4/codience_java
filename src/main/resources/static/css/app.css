@@ -5,3 +5,22 @@ a {
 a:hover {
 	text-decoration: underline;
 }
+
+.circle-btn:hover {
+  border: solid 1px lightgray;
+  box-shadow: none!important;
+}
+
+.text-line {
+	align-items: center;
+	padding-top: 10px;
+}
+
+.text-line:before,
+.text-line:after {
+  content: "";
+  height: 1px;
+  background: #000;
+  margin: 1px;
+  width: 40px;
+}
